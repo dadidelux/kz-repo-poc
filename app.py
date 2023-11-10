@@ -186,17 +186,20 @@ event_options = [
     "Curated list button press/screen",
     "Curated List Tab",
     "Custom Ads click",
-    "Successful Payment"
+    "Successful Payment",
 ]
+
 
 def get_clevertap_data(event_name, start_date, end_date):
     headers = {
-        "X-CleverTap-Account-Id": os.getenv("CLEVERTAP_ACCOUNT_ID"),
-        "X-CleverTap-Passcode": os.getenv("CLEVERTAP_PASSCODE"),
+        "X-CleverTap-Account-Id": st.secrets["CLEVERTAP_ACCOUNT_ID"],
+        "X-CleverTap-Passcode": st.secrets["CLEVERTAP_PASSCODE"],
         "Content-Type": "application/json",
     }
 
-    date_range = f'"from":{start_date.strftime("%Y%m%d")},"to":{end_date.strftime("%Y%m%d")}'
+    date_range = (
+        f'"from":{start_date.strftime("%Y%m%d")},"to":{end_date.strftime("%Y%m%d")}'
+    )
     data = '{"event_name":"' + event_name + '",' + date_range + "}"
 
     response = requests.post(
@@ -204,16 +207,16 @@ def get_clevertap_data(event_name, start_date, end_date):
     )
 
     response_output = response.text
-    #st.write("CleverTap API Response:")
-    #st.write(response_output)  # Print the entire response for inspection
+    # st.write("CleverTap API Response:")
+    # st.write(response_output)  # Print the entire response for inspection
 
     json_obj = json.loads(response_output)
     req_id = json_obj["req_id"]
 
     response_f = requests.post(
-    "https://api.clevertap.com/1/counts/events.json?req_id=" + req_id + "",
-    headers=headers,
-    data=data,
+        "https://api.clevertap.com/1/counts/events.json?req_id=" + req_id + "",
+        headers=headers,
+        data=data,
     )
 
     json_obj = json.loads(response_f.text)
@@ -221,12 +224,12 @@ def get_clevertap_data(event_name, start_date, end_date):
 
     return count_value
 
-def get_technodata(event_name, from_date, to_date):
 
+def get_technodata(event_name, from_date, to_date):
     # Headers using environment variables
     headers = {
-        "X-CleverTap-Account-Id": os.getenv("CLEVERTAP_ACCOUNT_ID"),
-        "X-CleverTap-Passcode": os.getenv("CLEVERTAP_PASSCODE"),
+        "X-CleverTap-Account-Id": st.secrets["CLEVERTAP_ACCOUNT_ID"],
+        "X-CleverTap-Passcode": st.secrets["CLEVERTAP_PASSCODE"],
         "Content-Type": "application/json",
     }
 
@@ -254,12 +257,13 @@ def get_technodata(event_name, from_date, to_date):
     }
 
     # Data payload as a dictionary
-    data = {"event_name": event_name, 
-            "from": int(from_date_str), 
-            "to": int(to_date_str), 
-            "groups": groups
-            }
-    #st.write(data)
+    data = {
+        "event_name": event_name,
+        "from": int(from_date_str),
+        "to": int(to_date_str),
+        "groups": groups,
+    }
+    # st.write(data)
 
     # Making the POST request to CleverTap
     response = requests.post(
@@ -271,8 +275,8 @@ def get_technodata(event_name, from_date, to_date):
     # Extract and print the response
     response_output = response.text
 
-    #st.write("EVENT_NAME:", event_name)
-    #st.write(response_output)
+    # st.write("EVENT_NAME:", event_name)
+    # st.write(response_output)
 
     # Extract and print the response
     json_obj = json.loads(response_output)
@@ -284,8 +288,8 @@ def get_technodata(event_name, from_date, to_date):
         data=data,
     )
 
-    #st.write("EVENT_NAME: " + event_name)
-    #st.write(response_f.text)
+    # st.write("EVENT_NAME: " + event_name)
+    # st.write(response_f.text)
 
     json_obj = json.loads(response_f.text)
     # Extract relevant data for the bar chart
@@ -308,11 +312,10 @@ def get_technodata(event_name, from_date, to_date):
 
 
 def get_technodata_2(event_name, from_date, to_date):
-
     # Headers using environment variables
     headers = {
-        "X-CleverTap-Account-Id": os.getenv("CLEVERTAP_ACCOUNT_ID"),
-        "X-CleverTap-Passcode": os.getenv("CLEVERTAP_PASSCODE"),
+        "X-CleverTap-Account-Id": st.secrets["CLEVERTAP_ACCOUNT_ID"],
+        "X-CleverTap-Passcode": st.secrets["CLEVERTAP_PASSCODE"],
         "Content-Type": "application/json",
     }
 
@@ -334,12 +337,13 @@ def get_technodata_2(event_name, from_date, to_date):
     }
 
     # Data payload as a dictionary
-    data = {"event_name": event_name, 
-            "from": int(from_date), 
-            "to": int(to_date), 
-            "groups": groups
-            }
-    #st.write(data)
+    data = {
+        "event_name": event_name,
+        "from": int(from_date),
+        "to": int(to_date),
+        "groups": groups,
+    }
+    # st.write(data)
 
     # Making the POST request to CleverTap
     response = requests.post(
@@ -351,8 +355,8 @@ def get_technodata_2(event_name, from_date, to_date):
     # Extract and print the response
     response_output = response.text
 
-    #st.write("EVENT_NAME:", event_name)
-    #st.write(response_output)
+    # st.write("EVENT_NAME:", event_name)
+    # st.write(response_output)
 
     # Extract and print the response
     json_obj = json.loads(response_output)
@@ -364,8 +368,8 @@ def get_technodata_2(event_name, from_date, to_date):
         data=data,
     )
 
-    #st.write("EVENT_NAME: " + event_name)
-    #st.write(response_f.text)
+    # st.write("EVENT_NAME: " + event_name)
+    # st.write(response_f.text)
 
     json_obj = json.loads(response_f.text)
     # Extract relevant data for the bar chart
@@ -388,7 +392,8 @@ def get_technodata_2(event_name, from_date, to_date):
     # Provide a link to download the CSV
     st.markdown(f"Download the CSV file [here](sandbox:/path/to/{csv_file_path})")
 
-#===================================== Streamlit app    ===============================
+
+# ===================================== Streamlit app    ===============================
 
 # Streamlit app
 st.title("CleverTap Event Analysis")
@@ -398,7 +403,9 @@ selected_event = st.selectbox("Select an Event", event_options)
 
 # Date range input for start date and end date
 start_date = st.date_input("Select Start Date", datetime.date.today())
-end_date = st.date_input("Select End Date", datetime.date.today() + datetime.timedelta(days=7))
+end_date = st.date_input(
+    "Select End Date", datetime.date.today() + datetime.timedelta(days=7)
+)
 
 # Button to trigger CleverTap API and display results
 if st.button("Get CleverTap Data"):
@@ -413,11 +420,11 @@ if st.button("Get CleverTap Data"):
             current_date += datetime.timedelta(days=1)
 
     # Convert results to DataFrame for plotting
-    df = pd.DataFrame(list(results.items()), columns=['Date', 'CleverTap Data'])
-    df['Date'] = pd.to_datetime(df['Date'])
+    df = pd.DataFrame(list(results.items()), columns=["Date", "CleverTap Data"])
+    df["Date"] = pd.to_datetime(df["Date"])
 
     # Plotting line chart
-    st.line_chart(df.set_index('Date'))
+    st.line_chart(df.set_index("Date"))
 
     # Display raw data
     st.write("Raw CleverTap Data:")
@@ -429,7 +436,7 @@ if st.button("Get Technodata"):
         # Convert dates to the format you want
         from_date_str = start_date.strftime("%Y%m%d")
         to_date_str = end_date.strftime("%Y%m%d")
-        
+
         # Use from_date_str and to_date_str as needed in your function
         get_technodata(selected_event, from_date_str, to_date_str)
         get_technodata_2(selected_event, from_date_str, to_date_str)
